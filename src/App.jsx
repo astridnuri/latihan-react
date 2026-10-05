@@ -6,8 +6,29 @@ import { Peserta } from "./components/Peserta";
 import "./App.css";
 import DataPeserta from "./components/DataPeserta";
 import FormPeserta from "./components/FormPeserta";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { Nav } from "react-bootstrap";
+
+//Route A: A
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import MainLayout from "./pages/MainLayout.jsx";
+import ListUser from "./pages/user/List.jsx";
 
 function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<Login />}></Route>
+        <Route element={<MainLayout />}>
+          <Route path="/dashboard" element={<Dashboard />}/>
+          <Route path="/user" element={<ListUser />}/>
+        </Route>
+        
+      </Routes>
+    </BrowserRouter>
+  );
   //destruct
   // const siswa = {
   //   name: "Reza",

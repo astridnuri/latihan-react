@@ -1,35 +1,40 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const FormPeserta = ({ onSimpan, onCancel, pesertaEdit }) => {
   const [nama, setNama] = useState("");
   const [jurusan, setJurusan] = useState("");
-
+  const [error, setError] = useState("");
 
   //useEffect hasil request dari server mghasilkn sbuah data, dirender cuma 1x (tdk ada perubahan)
   //useEffect bentukny arrow function
 
-    useEffect(()=>{
-        if(pesertaEdit) {
-            setNama(pesertaEdit.nama)
-            setJurusan(pesertaEdit.jurusan)
-        } else {
-            //tambah
-            setNama("")
-            setJurusan("")
-        }
-    }, [pesertaEdit])
+  useEffect(() => {
+    if (pesertaEdit) {
+      setNama(pesertaEdit.nama);
+      setJurusan(pesertaEdit.jurusan);
+    } else {
+      //tambah
+      setNama("");
+      setJurusan("");
+    }
+  }, [pesertaEdit]);
 
   const handleSimpan = (e) => {
     e.preventDefault();
+    if (!nama.trim() || !jurusan.trim()) {
+      setError("Mohon isi nama & jurusan");
+      alert("Mohon isi nama & jurusan");
+      return;
+    }
     //jika dia edit
     //jika dia tambah
     onSimpan({
-        id: pesertaEdit? pesertaEdit.id : Date.now(),
-        nama, //maxutnya nama: nama;
-        jurusan
-    })
-    setNama("")
-    setJurusan("")
+      id: pesertaEdit ? pesertaEdit.id : Date.now(),
+      nama, //maxutnya nama: nama;
+      jurusan,
+    });
+    setNama("");
+    setJurusan("");
   };
 
   return (
