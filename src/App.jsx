@@ -3,7 +3,7 @@ import heroImg from "./assets/hero.png";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "./assets/vite.svg";
 import { Peserta } from "./components/Peserta";
-import "./App.css";
+// import "./App.css";
 import DataPeserta from "./components/DataPeserta";
 import FormPeserta from "./components/FormPeserta";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
@@ -14,6 +14,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import MainLayout from "./pages/MainLayout.jsx";
 import ListUser from "./pages/user/List.jsx";
+import ListCategory from "./pages/category/CategoryPage.jsx";
+import ListProduct from "./pages/product/ProductPage.jsx";
 
 function App() {
   return (
@@ -22,10 +24,11 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />}></Route>
         <Route element={<MainLayout />}>
-          <Route path="/dashboard" element={<Dashboard />}/>
-          <Route path="/user" element={<ListUser />}/>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/user" element={<ListUser />} />
+          <Route path="/category" element={<ListCategory />} />
+          <Route path="/product" element={<ListProduct />} />
         </Route>
-        
       </Routes>
     </BrowserRouter>
   );
@@ -39,25 +42,25 @@ function App() {
   // console.log(name)
   // console.log(nilai)
 
-  const [listPeserta, setListPeserta] = useState(Peserta);
-  const [editPeserta, setEditPeserta] = useState(null);
-  //const listPeserta = Peserta
+  // const [listPeserta, setListPeserta] = useState(Peserta);
+  // const [editPeserta, setEditPeserta] = useState(null);
+  // //const listPeserta = Peserta
 
-  const handleSubmit = (dataForm) => {
-    if (editPeserta) {
-      setListPeserta(listPeserta.map((item) => (item.id === dataForm.id ? dataForm : item)));
-      setEditPeserta(null);
-    } else {
-      setListPeserta([...listPeserta, dataForm]);
-    }
-  };
+  // const handleSubmit = (dataForm) => {
+  //   if (editPeserta) {
+  //     setListPeserta(listPeserta.map((item) => (item.id === dataForm.id ? dataForm : item)));
+  //     setEditPeserta(null);
+  //   } else {
+  //     setListPeserta([...listPeserta, dataForm]);
+  //   }
+  // };
 
-  const handleHapus = (id) => {
-    setListPeserta(listPeserta.filter((item) => item.id !== id));
-    if (id === editPeserta.id) {
-      setEditPeserta(null);
-    }
-  };
+  // const handleHapus = (id) => {
+  //   setListPeserta(listPeserta.filter((item) => item.id !== id));
+  //   if (id === editPeserta.id) {
+  //     setEditPeserta(null);
+  //   }
+  // };
   // //mengubah data jd dinamis dgn aksi
   // //getter, setter: count, setCount
 
