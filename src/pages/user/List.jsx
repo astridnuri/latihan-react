@@ -1,6 +1,8 @@
 // import { Card, Form, Button, Table, Modal } from "react-bootstrap"; ini klo mw pake bootstrap
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
+import { Label } from "../../components/ui/label";
+import { Input } from "../../components/ui/input";
 import { useState } from "react";
 import AppModal from "../../components/AppModal";
 
@@ -9,18 +11,21 @@ const dataUsers = [
     id: 1,
     name: "Reza",
     email: "reza@abc.com",
+    status: "Active",
     password: 123456,
   },
   {
     id: 2,
     name: "Tri",
     email: "tri@abc.com",
+    status: "Active",
     password: 234567,
   },
   {
     id: 3,
     name: "Inas",
     email: "inas@abc.com",
+    status: "Active",
     password: 345678,
   },
 ];
@@ -31,7 +36,7 @@ const ListUser = () => {
     name: "",
     email: "",
     password: "",
-    status: "Active",
+    status: "",
   };
   const [showModal, setShowModal] = useState(false);
   const [users, setUsers] = useState(dataUsers);
@@ -88,15 +93,20 @@ const ListUser = () => {
   return (
     <>
       <Card className="shadow-sm border-border p-6">
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+          <div>
+            <CardTitle className="text-xl font-bold">Data User</CardTitle>
+          </div>
+          <Button variant="primary" onClick={handleOpenModal}>
+            Create New User
+          </Button>
+        </CardHeader>
         <CardContent className="p-0">
-          <div className="d-flex justify-content-between align-items-center mb-3">
+          {/* <div className="d-flex justify-content-between align-items-center mb-3">
             <div>
               <h4 className="mb-0 fw-bold">Data User</h4>
             </div>
-            <Button variant="primary" onClick={handleOpenModal}>
-              Create New User
-            </Button>
-          </div>
+          </div> */}
           <table striped responsive hover className="w-full text-left text-sm">
             <thead className="border-y bg-muted/30 text-xs uppercase text-muted-foreground">
               <tr>
@@ -113,7 +123,7 @@ const ListUser = () => {
                   <td className="px-4 py-6 whitespace-nowrap">{index + 1}</td>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
-                  <td>{user.status}</td>
+                  <td className="px-6">{user.status}</td>
                   <td className="px-4 py-6 text-right whitespace-nowrap">
                     <Button variant="warning" size="sm" className="me-2" onClick={() => handleEditModal(user)}>
                       Edit
@@ -160,7 +170,20 @@ const ListUser = () => {
       </Modal> */}
 
       <AppModal show={showModal} onClose={handleCloseModal} title={isEdit ? "Edit User" : "Create New User"} onSubmit={handleSubmit} submitLabel={isEdit ? "Save Changes" : "Save"}>
-        <h1>tes</h1>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Name</Label>
+            <Input id="name" name="name" value={formData.name} onChange={handleChange} required placeholder="Enter your name"></Input>
+          </div>
+          <div className="space-y-2">
+            <Label>Email</Label>
+            <Input id="email" name="email" value={formData.email} onChange={handleChange} required placeholder="Enter your email"></Input>
+          </div>
+          <div className="space-y-2">
+            <Label>Password</Label>
+            <Input id="password" name="password" value={formData.password} onChange={handleChange} required placeholder="Enter your password"></Input>
+          </div>
+        </div>
         {/* <Form>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
