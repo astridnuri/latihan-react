@@ -3,32 +3,34 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "../../components/ui/button";
 import { Label } from "../../components/ui/label";
 import { Input } from "../../components/ui/input";
-import { useState } from "react";
+import { RadioGroup, RadioGroupItem } from "../../components/ui/radio-group";
+import { useState, useEffect } from "react";
 import AppModal from "../../components/AppModal";
+import api from "../../services/api.js";
 
-const dataUsers = [
-  {
-    id: 1,
-    name: "Reza",
-    email: "reza@abc.com",
-    status: "Active",
-    password: 123456,
-  },
-  {
-    id: 2,
-    name: "Tri",
-    email: "tri@abc.com",
-    status: "Active",
-    password: 234567,
-  },
-  {
-    id: 3,
-    name: "Inas",
-    email: "inas@abc.com",
-    status: "Active",
-    password: 345678,
-  },
-];
+// const dataUsers = [
+//   {
+//     id: 1,
+//     name: "Reza",
+//     email: "reza@abc.com",
+//     status: "Active",
+//     password: 123456,
+//   },
+//   {
+//     id: 2,
+//     name: "Tri",
+//     email: "tri@abc.com",
+//     status: "Active",
+//     password: 234567,
+//   },
+//   {
+//     id: 3,
+//     name: "Inas",
+//     email: "inas@abc.com",
+//     status: "Active",
+//     password: 345678,
+//   },
+// ];
 
 const ListUser = () => {
   const _initForm = {
@@ -36,12 +38,24 @@ const ListUser = () => {
     name: "",
     email: "",
     password: "",
-    status: "",
+    is_active: "1",
   };
   const [showModal, setShowModal] = useState(false);
-  const [users, setUsers] = useState(dataUsers);
+  const [users, setUsers] = useState([]); //supaya di awal muncul tabel kosongan
   const [formData, setFormData] = useState(_initForm);
   const [isEdit, setIsEdit] = useState(false);
+  const fetchUser = async() => {
+    try {
+      const response = await api.get("/user")
+      setUsers(response.data.data)
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  useEffect(() => {
+    fetchUser()
+  },[])
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -66,27 +80,44 @@ const ListUser = () => {
     setShowModal(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    //jika edit data
-    if (isEdit) {
-      setUsers(users.map((user) => (user.id === formData.id ? formData : user)));
-    } else {
-      const newUser = {
-        ...formData,
-        id: Date.now(),
-      };
-      setUsers([...users, newUser]);
+    try {
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        is_active: formData.is_active
+      }
+      //jika edit data
+      if (isEdit) {
+        await api.put(`/user/${formData.id}`, payload);
+        // setUsers(users.map((user) => (user.id === formData.id ? formData : user)));
+      } else {
+        await api.post("/user", payload)
+        // const newUser = {
+        //   ...formData,
+        //   id: Date.now(),
+        // };
+        // setUsers([...users, newUser]);
+      }
       setFormData(_initForm);
+    } catch (error) {
+      const errMsg= error.message
+      console.log(errMsg)
+    } finally {
+      fetchUser()
+      setShowModal(false);
     }
-    setShowModal(false);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async(id) => {
     const confirmation = window.confirm("Are you sure want to delete this data?");
     if (confirmation) {
       //filter: users
-      setUsers(users.filter((u) => u.id !== id));
+      await api.delete(`/user/${id}`)
+      fetchUser()
+      // setUsers(users.filter((u) => u.id !== id));
     }
   };
 
@@ -123,12 +154,14 @@ const ListUser = () => {
                   <td className="px-4 py-6 whitespace-nowrap">{index + 1}</td>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
-                  <td className="px-6">{user.status}</td>
+                  <td className="px-6">
+                    <span className={`border rounded-sm py-1 px-2 ${user.is_active === 1 ? "bg-green-600" : "bg-red-600"} text-white`}>{user.is_active === 1 ? "Active" : "Inactive"}</span>
+                  </td>
                   <td className="px-4 py-6 text-right whitespace-nowrap">
-                    <Button variant="warning" size="sm" className="me-2" onClick={() => handleEditModal(user)}>
+                    <Button variant="warning" size="sm" className="me-2 bg-blue-500 text-white rounded-sm" onClick={() => handleEditModal(user)}>
                       Edit
                     </Button>
-                    <Button variant="danger" size="sm" className="me-2" onClick={() => handleDelete(user.id)}>
+                    <Button variant="destructive" size="sm" className="me-2 rounded-sm" onClick={() => handleDelete(user.id)}>
                       Delete
                     </Button>
                   </td>
@@ -181,8 +214,22 @@ const ListUser = () => {
           </div>
           <div className="space-y-2">
             <Label>Password</Label>
-            <Input id="password" name="password" value={formData.password} onChange={handleChange} required placeholder="Enter your password"></Input>
+            <Input id="password" type="password" name="password" value={formData.password} onChange={handleChange} required={isEdit ? false : true} placeholder="Enter your password"></Input>
           </div>
+          {isEdit ? (
+            <RadioGroup value={String(formData.is_active)} onValueChange={(val) => setFormData({ ...formData, is_active: parseInt(val) })} className="w-fit flex gap-4">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="1" id="active" />
+                <Label htmlFor="active">Active</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="0" id="inactive" />
+                <Label htmlFor="inactive">Inactive</Label>
+              </div>
+            </RadioGroup>
+          ) : (
+            ""
+          )}
         </div>
         {/* <Form>
           <Form.Group className="mb-3">

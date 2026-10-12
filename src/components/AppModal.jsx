@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 
 const AppModal = ({ show, onClose, title, children, submitLabel = "Save", cancelLabel="Cancel", onSubmit, isLoading = false, showFooter = true }) => {
     return (
-      <Dialog open={show} openChange={onClose}>
+      <Dialog open={show} onOpenChange={onClose}>
         <DialogContent className="sm:max-w-[540px]">
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
