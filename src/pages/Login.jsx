@@ -7,6 +7,8 @@ import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
 import { Car } from "lucide-react";
 import Capybara from "@/assets/capybara.jpg";
+import api from "../services/api.js"
+import { FormFloating } from "react-bootstrap";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -28,28 +30,21 @@ export default function Login() {
     }));
   };
 
+
   const handleLogin = async(e) => {
     e.preventDefault(); //mencegah aksi bawaan yaitu mengsubmit
     setIsLoading(true);
 
     try{
-      const res = await fetch("http://localhost:5000/api/auth/login",{
-        method:"POST", //dari postman
-        headers:{
-          Accept:"application/json",
-          "Content-Type":"application/json"
-        },
-        body: JSON.stringify(formData)
-      })
+      const res = await api.post("/auth/login", formData)
+
       console.log(res)
-      const result = await res.json()
-      if(!res.ok){
-        throw new Error(result.message || 'Please check your email and password')
-      }
-      localStorage.setItem("", result.data.token)
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1000);
+      // const result = await res.json()
+      // if(!res.ok){
+      //   throw new Error(result.message || 'Please check your email and password')
+      // }
+      localStorage.setItem("token", res.data.token)
+      navigate("/dashboard");
     } catch(error) {
       console.log(error.message)
       setErrorMsg(error.message)
