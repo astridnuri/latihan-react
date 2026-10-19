@@ -44,18 +44,19 @@ const ListUser = () => {
   const [users, setUsers] = useState([]); //supaya di awal muncul tabel kosongan
   const [formData, setFormData] = useState(_initForm);
   const [isEdit, setIsEdit] = useState(false);
-  const fetchUser = async() => {
+  const fetchUser = async () => {
     try {
-      const response = await api.get("/user")
-      setUsers(response.data)
+      const response = await api.get("/user");
+      console.log(response);
+      setUsers(response.data);
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchUser()
-  },[])
+    fetchUser();
+  }, []);
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -80,23 +81,21 @@ const ListUser = () => {
     setShowModal(false);
   };
 
-  
-
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const payload = {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        is_active: formData.is_active
-      }
+        is_active: formData.is_active,
+      };
       //jika edit data
       if (isEdit) {
         await api.put(`/user/${formData.id}`, payload);
         // setUsers(users.map((user) => (user.id === formData.id ? formData : user)));
       } else {
-        await api.post("/user", payload)
+        await api.post("/user", payload);
         // const newUser = {
         //   ...formData,
         //   id: Date.now(),
@@ -105,20 +104,20 @@ const ListUser = () => {
       }
       setFormData(_initForm);
     } catch (error) {
-      const errMsg= error.message
-      console.log(errMsg)
+      const errMsg = error.message;
+      console.log(errMsg);
     } finally {
-      fetchUser()
+      fetchUser();
       setShowModal(false);
     }
   };
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     const confirmation = window.confirm("Are you sure want to delete this data?");
     if (confirmation) {
       //filter: users
-      await api.delete(`/user/${id}`)
-      fetchUser()
+      await api.delete(`/user/${id}`);
+      fetchUser();
       // setUsers(users.filter((u) => u.id !== id));
     }
   };
