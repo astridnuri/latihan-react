@@ -1,11 +1,11 @@
-import { Home, Inbox, File, FileArchive, Search, Settings, User2, Users, ChevronUp, LogOut } from "lucide-react";
+import { Home, Inbox, File, FileArchive, Search, ShoppingBag, Settings, User2, Users, ChevronUp, LogOut } from "lucide-react";
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 
 // Menu navigasi utama
 const items = [
   { title: "Home", url: "#", icon: Home },
-  { title: "Inbox", url: "#", icon: Inbox },
+  { title: "Transaction", url: "/transaction", icon: ShoppingBag },
   { title: "User", url: "/user", icon: Users },
   { title: "Category", url: "/category", icon: File },
   { title: "Product", url: "/product", icon: FileArchive },
