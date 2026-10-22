@@ -18,6 +18,7 @@ import ListCategory from "./pages/category/CategoryPage.jsx";
 import ListProduct from "./pages/product/ProductPage.jsx";
 import ListTransaction from "./pages/transaction/ListTransaction.jsx";
 import FormTransaction from "./pages/transaction/Form";
+import PrintTransaction from "./pages/transaction/Print";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/product" element={<ListProduct />} />
           <Route path="/transaction" element={<ListTransaction />} />
           <Route path="/transaction/create" element={<FormTransaction />} />
+          <Route path="/transaction/print" element={<PrintTransaction />} />
         </Route>
       </Routes>
     </BrowserRouter>
